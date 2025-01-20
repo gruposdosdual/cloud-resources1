@@ -1,0 +1,44 @@
+---
+- name: Configure Web Server
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Start and enable Apache service
+      service:
+        name: apache2
+        state: started
+        enabled: true
+
+    - name: Install MySQL client
+      apt: 
+       name: mysql-client
+       state: present 
+      
+    - name: Create MySQL configuration file
+      copy: 
+      dest: /home/ubuntu/.my.cnf
+      content: |
+       [mysql]
+       user = {{ mysql_user }}
+       password = {{ mysql_password }}
+       host = {{ mysql_host }}
+       database = {{ mysql_db }}
+      
+    - name: Test MySQL connection
+      command: mysql --defaults-file=/home/ubuntu/.my.cnf -e "SHOW DATABASES;" 
+      register: mysql_test
+      
+    - name: Debug MySQL connection result 
+      debug: 
+       var: mysql_test.stdout_lines
+
