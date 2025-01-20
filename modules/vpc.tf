@@ -12,6 +12,11 @@ module "vpc"{
     enable_nat_gateway = true
     single_nat_gateway = false
 
+    tags = {
+        Terraform = "true"
+        Environmet = "feature/add-resources"
+    }
+
 
 
 }
