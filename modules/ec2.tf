@@ -7,11 +7,13 @@ resource "aws_instance" "ec2_instance" {
     Name       = "ec2-instance"
     Environment = "feature/add-resources"
   }
+
+  depends_on = [module.vpc]
 }
 
 # Provisioner
 resource "null_resource" "provision_file" {
-  depends_on = [aws_instance.web_server]
+  depends_on = [aws_instance.ec2_instance]
   
   # Copiar el archivo install.yaml a la instancia remota
   provisioner "file" {
@@ -21,7 +23,7 @@ resource "null_resource" "provision_file" {
       type        = "ssh"
       user        = "ubuntu"
       private_key = file("~/.ssh/my-aws-key.pem")
-      host        = aws_instance.web_server.public_ip
+      host        = aws_instance.ec2_instance.public_ip
       timeout     = "5m"
     }
   }
@@ -32,7 +34,7 @@ resource "null_resource" "provision_file" {
       type        = "ssh"
       user        = "ubuntu"
       private_key = file("~/.ssh/my-aws-key.pem")
-      host        = aws_instance.web_server.public_ip
+      host        = aws_instance.ec2_instance.public_ip
       timeout     = "5m"
     }
   }
@@ -42,7 +44,7 @@ resource "null_resource" "provision_file" {
       type        = "ssh"
       user        = "ubuntu"
       private_key = file("~/.ssh/my-aws-key.pem")
-      host        = aws_instance.web_server.public_ip
+      host        = aws_instance.ec2_instance.public_ip
       timeout     = "5m"
     }
 
@@ -52,6 +54,9 @@ resource "null_resource" "provision_file" {
       "sudo apt install -y ansible",
       "ansible-playbook -i 'localhost,' -c local /home/ubuntu/install.yaml"
 
+    ]
+  }
+}  
 
 
 
