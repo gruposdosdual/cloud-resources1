@@ -30,7 +30,7 @@ resource "aws_security_group" "rds_sg" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16"] # Solo permite acceso desde la VPC
+    cidr_blocks = ["0.0.0.0/0"] # Ahora desde cualquiera # Solo permite acceso desde la VPC
   }
 
   egress {
@@ -44,4 +44,11 @@ resource "aws_security_group" "rds_sg" {
     Name        = "allow-mysql"
     Environment = "feature/add-resources"
   }
+
+  lifecycle {
+    create_before_destroy = true    
+  }
+
 }
+
+

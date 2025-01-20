@@ -19,4 +19,10 @@ module "vpc"{
         Terraform = "true"
         Environmet = "feature/add-resources"
     }
+
+    /*
+    lifecycle {
+    create_before_destroy = true    
+  }
+  */
 }
