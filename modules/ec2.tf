@@ -13,6 +13,20 @@ resource "aws_instance" "ec2_instance" {
 }
 
 resource "aws_key_pair" "ssh_keypair" {
+  key_name   = "my-aws-key" # Nombre de la clave existente
+  public_key = file("~/.ssh/my-aws-key.pub")
+
+  lifecycle {
+    ignore_changes = [key_name] # Ignora cambios en la clave
+  }
+}
+
+
+
+
+/*
+resource "aws_key_pair" "ssh_keypair" {
   key_name   = "my-aws-key"
   public_key = file("~/.ssh/id_rsa.pub") # Asegúrate de tener tu clave pública generada localmente # private_key = file("~/.ssh/my-aws-key.pem")
 }
+*/

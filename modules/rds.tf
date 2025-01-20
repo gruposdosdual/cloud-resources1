@@ -4,7 +4,7 @@ resource "aws_db_instance" "rds_instance" {
   engine               = "mysql"
   engine_version       = "8.0"
   instance_class       = "db.t3.micro"
-  db_name = 
+  db_name              = "mydb"
   username             = "admin"
   password             = "password123" # Cambia por una contraseña segura
   publicly_accessible  = false
