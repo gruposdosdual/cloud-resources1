@@ -65,6 +65,9 @@ jobs:
       - name: Terraform Plan
         run: |
           cd proyecto_final/modules
+          terraform init
+          terraform import aws_security_group.allow_ssh_mr1 sg-0b02cef49914fa3bd
+          terraform import aws_security_group.allow_mysql_mr1 sg-01ff02089aeefc6c3
           terraform plan -out=tfplan
 
       # 8. Apply Plan (Requiere aprobación manual)
