@@ -55,10 +55,10 @@ jobs:
 
           
       # 7. Diagnóstico del estado
-      - name: Check Terraform State
-        run: |
-          cd proyecto_final/modulo_wordpress
-          terraform state list  
+      #- name: Check Terraform State
+        #run: |
+          #cd proyecto_final/modulo_wordpress
+          #terraform state list  
 
       
       # 7. Terraform Plan
