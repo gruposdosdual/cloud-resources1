@@ -64,14 +64,14 @@ jobs:
       # 7. Terraform Plan
       - name: Terraform Plan
         run: |
-          cd proyecto_final/modulo_wordpress
+          cd proyecto_final/modules
           terraform plan -out=tfplan
 
       # 8. Apply Plan (Requiere aprobación manual)
       - name: Apply Plan (Manual Approval Required)
         if: github.event_name == 'workflow_dispatch'
         run: |
-          cd proyecto_final/modulo_wordpress
+          cd proyecto_final/modules
           terraform apply tfplan
       
       
