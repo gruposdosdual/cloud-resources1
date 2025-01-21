@@ -86,16 +86,7 @@
         name: dockeruser
         groups: docker
         append: yes
-
-
-  # 7. Deploy WordPress and Apache using Docker Compose
-    #- name: Copia archivo .env
-    #  copy:
-    #    src:  .env  # Ajusta la ruta a tu archivo.env
-    #    dest: /home/ubuntu/.env
-    #    mode: '0644'
-
-    
+      
         
     # - name: Copy the docker-compose.yml file
     #   copy:

@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress
+    #env_file: 
+    #  - .env #E:\CURSO DEVOP&CLOUD_CAMPUSDUAL_CLUSTERTIC\2025\08 OCTAVA CLASE_IaC_Terraform-Terragrunt_Docker_16012025\infra-resources1\modulo_wordpress\.env
+    environment:
+      WORDPRESS_DB_HOST: database-dev.criuqg402mat.eu-west-3.rds.amazonaws.com #${db_endpoint} #${DB_HOST}  # Aquí va el endpoint de tu RDS MySQL
+      WORDPRESS_DB_NAME: mydbenv     #${DB_NAME}
+      WORDPRESS_DB_USER: admin #${DB_USER}
+      WORDPRESS_DB_PASSWORD: password123 #${DB_PASSWORD}
+    ports:
+      - "8080:80"
+    networks:
+      - wordpress-network
+    restart: always      
+    volumes:
+       - ./wordpress-data:/var/www/html
+       #- ./wp-config.php:/var/www/html/wp-config.php  # Copiar tu archivo wp-config.php al contenedor
+      
+
+networks:
+  wordpress-network:
+    driver: bridge
+
+#volumes:
+  #wordpress-data:
+    #driver: local
