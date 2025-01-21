@@ -3,7 +3,7 @@ name: Deploy to Dev with Terraform
 on:
   push:
     branches:
-      - feature/add-resources  # Ejecuta el workflow solo cuando se haga un push a la rama feature/add resources
+      - dev  # Ejecuta el workflow solo cuando se haga un push a la rama feature/add resources
   workflow_dispatch:  # Permite activar manualmente el pipeline
 
 jobs:  
