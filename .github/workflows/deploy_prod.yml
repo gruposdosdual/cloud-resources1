@@ -1,4 +1,4 @@
-name: Deploy to Dev with Terraform
+name: Deploy to Prod with Terraform
 
 on:
   push:
