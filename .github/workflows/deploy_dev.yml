@@ -57,21 +57,21 @@ jobs:
       # 7. Diagnóstico del estado
       - name: Check Terraform State
         run: |
-          cd modulo_wordpress
+          cd proyecto_final/modulo_wordpress
           terraform state list  
 
       
       # 7. Terraform Plan
       - name: Terraform Plan
         run: |
-          cd proyecto_inicial
+          cd proyecto_final/modulo_wordpress
           terraform plan -out=tfplan
 
       # 8. Apply Plan (Requiere aprobación manual)
       - name: Apply Plan (Manual Approval Required)
         if: github.event_name == 'workflow_dispatch'
         run: |
-          cd proyecto_inicial
+          cd proyecto_final/modulo_wordpress
           terraform apply tfplan
       
       
