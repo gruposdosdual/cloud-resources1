@@ -9,28 +9,42 @@ services:
     volumes:
       - ./frontend:/usr/share/nginx/html  # Mapea los archivos estáticos al contenedor
       - ./frontend/nginx.conf:/etc/nginx/nginx.conf  # Configuración personalizada de NGINX
+    networks:
+    - app_network
 
   backend:
     build:
-      context: ./  # Construir la imagen desde el directorio app-web
-      #dockerfile: ./Dockerfile  # Asegúrate de que la ruta esté correcta si el Dockerfile no está en app-web
+      context: ./backend  # Construir la imagen desde el directorio app-web
+      #dockerfile: ./backend  # Asegúrate de que la ruta esté correcta si el Dockerfile no está en app-web
     container_name: backend
-    working_dir: /app/backend  # Directorio de trabajo dentro del contenedor (donde estará server.js)
-    volumes:
-      - ./app-web/backend:/app/backend  # Mapea el código del backend al contenedor
-    command: "node server.js"  # Comando para iniciar la aplicación
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mydatabase  # URI de conexión a MongoDB
+    #working_dir: /app/backend  # Directorio de trabajo dentro del contenedor (donde estará server.js)
+    #volumes:
+    #  - ./app-web/backend:/app/backend  # Mapea el código del backend al contenedor
+    #command: "node server.js"  # Comando para iniciar la aplicación
     ports:
-      - "3000:3000"  # Expone el backend en el puerto 3000
+      - "3000:3000"  # Expone el backend en el puerto 3000    
     depends_on:
       - database  # El backend depende de la base de datos
+    networks:
+    - app_network
 
   database:
     image: mongo:5.0  # Imagen de MongoDB
     container_name: database
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root  # Usuario root
+      - MONGO_INITDB_ROOT_PASSWORD=rootpassword  # Contraseña root
     ports:
       - "27017:27017"  # Expone MongoDB en el puerto 27017
     volumes:
       - mongodb_data:/data/db  # Volumen persistente para los datos de la base de datos
+    networks:
+    - app_network
+
+networks:
+  app_network:  # Red de red para los contenedores
 
 volumes:
   mongodb_data:  # Volumen para la base de datos

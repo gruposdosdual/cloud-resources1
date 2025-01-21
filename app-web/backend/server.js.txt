@@ -1,0 +1,40 @@
+const express = require('express');
+const mongoose = require('mongoose');
+
+const app = express();
+const PORT = 3000;
+
+// Modelo de ejemplo para MongoDB
+const Item = mongoose.model('Item', new mongoose.Schema({ name: String }));
+
+// Conexión a MongoDB
+mongoose
+  .connect('mongodb://database:27017/mydatabase', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('Conectado a MongoDB'))
+  .catch((err) => console.error('Error al conectar a MongoDB:', err));
+
+// Ruta principal
+app.get('/', (req, res) => {
+  res.send('¡Hola desde el backend!');
+});
+
+// Ruta API para devolver datos desde MongoDB
+app.get('/api/items', async (req, res) => {
+  const items = await Item.find(); // Obtén todos los documentos
+  res.json(items);
+});
+
+// Ruta API para insertar datos de prueba
+app.get('/api/add-item', async (req, res) => {
+  const newItem = new Item({ name: `Item ${Date.now()}` });
+  await newItem.save();
+  res.send('¡Item añadido con éxito!');
+});
+
+// Servidor escuchando
+app.listen(PORT, () => {
+  console.log(`Backend ejecutándose en el puerto ${PORT}`);
+});
