@@ -1,0 +1,83 @@
+name: Deploy to Dev with Terraform
+
+on:
+  push:
+    branches:
+      - prod  # Ejecuta el workflow solo cuando se haga un push a la rama feature/add resources
+  workflow_dispatch:  # Permite activar manualmente el pipeline
+
+jobs:  
+  deploy:
+    runs-on: ubuntu-latest    
+    
+  
+    steps:
+      # 1. Configurar el repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Configurar credenciales de AWS
+      - name: Configure AWS credentials
+        run: |
+          mkdir -p ~/.aws          
+          echo "[profile ${{ secrets.AWS_PROFILE }}]" > ~/.aws/config
+          echo "region = eu-west-3" >> ~/.aws/config          
+          echo "output = json" >> ~/.aws/config
+
+          echo "[${{ secrets.AWS_PROFILE }}]" > ~/.aws/credentials
+          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials          
+          echo "aws_session_token = ${{ secrets.AWS_SESSION_TOKEN }}" >> ~/.aws/credentials
+        
+
+      # 3. Instalar terraform
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.10.0  # Cambia según la versión que necesites
+
+      
+      # 5. Verificar version Terraform
+      - name: Verify Terraform version
+        run: | 
+          terraform --version     
+      
+
+      # 6. Configurar la clave SSH
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/my-aws-key.pem
+          chmod 600 ~/.ssh/my-aws-key.pem
+        
+        env:
+          aws_ssh_key: ${{ secrets.AWS_SSH_KEY }}              
+
+          
+      # 7. Diagnóstico del estado
+      #- name: Check Terraform State
+        #run: |
+          #cd proyecto_final/modulo_wordpress
+          #terraform state list  
+
+      
+      # 7. Terraform Plan
+      - name: Terraform Plan
+        run: |
+          cd proyecto_final/modules
+          terraform init
+          terraform import aws_security_group.allow_ssh_mr1 sg-0b02cef49914fa3bd
+          terraform import aws_security_group.allow_mysql_mr1 sg-01ff02089aeefc6c3
+          terraform plan -out=tfplan
+
+      # 8. Apply Plan (Requiere aprobación manual)
+      - name: Apply Plan (Manual Approval Required)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          cd proyecto_final/modules
+          terraform apply tfplan -auto-approve
+      
+      
+
+
+# -----------------------------------------------------------------------------------------------#
