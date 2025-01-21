@@ -1,3 +1,6 @@
+/*
+
+
 # RDS Instance
 resource "aws_db_instance" "rds_instance" {
   allocated_storage    = 20
@@ -28,7 +31,7 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
     Name = "rds-subnet-group"
   }
 }
-
+*/
 
 
 

@@ -1,5 +1,6 @@
 resource "aws_security_group" "allow_ssh" {
-  name_prefix = "allow-ssh-"
+  name = "allow-ssh"
+  description = "Allow SSH inbound traffic"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
@@ -23,7 +24,7 @@ resource "aws_security_group" "allow_ssh" {
 }
 
 resource "aws_security_group" "rds_sg" {
-  name_prefix = "allow-mysql-"
+  name = "allow-mysql-"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
