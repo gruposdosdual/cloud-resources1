@@ -25,6 +25,7 @@ services:
     #command: "node server.js"  # Comando para iniciar la aplicación
     ports:
       - "3000:3000"  # Expone el backend en el puerto 3000    
+    command: "node server.js"  # Comando para iniciar la aplicación
     depends_on:
       - database  # El backend depende de la base de datos
     networks:

@@ -1,8 +1,8 @@
 # Grupo de seguridad para SSH y WORDPRESS
-resource "aws_security_group" "allow_ssh_mr1" {
-  name        = "allow_ssh_mr1"
+resource "aws_security_group" "allow_ssh_docker" {
+  name        = "allow_ssh_docker"
   description = "Allow SSH inbound traffic"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = aws_vpc.main_vpc.id
 
   ingress {
     from_port   = 22
@@ -12,8 +12,8 @@ resource "aws_security_group" "allow_ssh_mr1" {
   }
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 8081
+    to_port     = 8081
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -26,15 +26,15 @@ resource "aws_security_group" "allow_ssh_mr1" {
   }
 
   tags = {
-    Name = "Allow SSH-MR1"
+    Name = "Allow SSH-DOCKER"
   }
 }
 
 # Grupo de seguridad para MySQL
-resource "aws_security_group" "allow_mysql_mr1" {
-  name        = "allow_mysql_mr1"
+resource "aws_security_group" "allow_mysql_docker" {
+  name        = "allow_mysql_docker"
   description = "Allow MySQL inbound traffic"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = aws_vpc.main_vpc.id
 
   ingress {
     from_port       = 3306
@@ -56,7 +56,83 @@ resource "aws_security_group" "allow_mysql_mr1" {
   }
 }
 
+/*
+provider "aws" {
+  region = "us-east-1" # Cambia esto por tu región
+}
 
+resource "aws_instance" "app_instance" {
+  ami           = "ami-0c02fb55956c7d316" # Amazon Linux 2, cambia según tu preferencia
+  instance_type = "t2.micro"
+  key_name      = "your-key-pair" # Cambia por el nombre de tu par de claves
+  security_groups = [aws_security_group.app_sg.name]
+
+  tags = {
+    Name = "docker-app-instance"
+  }
+
+  provisioner "file" {
+    source      = "install.yml"
+    destination = "/home/ubuntu/install.yml"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update -y",
+      "sudo apt-get install -y ansible",
+      "ansible-playbook /home/ubuntu/install.yml"
+    ]
+  }
+}
+
+resource "aws_security_group" "app_sg" {
+  name_prefix = "docker-app-sg-"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8081
+    to_port     = 8081
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 27017
+    to_port     = 27017
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+
+*/
 
 
 

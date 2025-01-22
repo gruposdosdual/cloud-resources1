@@ -10,7 +10,7 @@ resource "aws_db_instance" "instance_db" {
   publicly_accessible   = false
   skip_final_snapshot   = true
   db_subnet_group_name  = aws_db_subnet_group.mysql_subnet_group.name
-  vpc_security_group_ids = [aws_security_group.allow_mysql_mr1.id]
+  vpc_security_group_ids = [aws_security_group.allow_mysql_docker.id]
   identifier            = "database-${var.environment}" 
 
   
@@ -29,15 +29,15 @@ resource "aws_instance" "web_server" {
   instance_type = var.ami_instance_type #"t3.small"
   key_name      = "my-aws-key"
   disable_api_termination = false
-  subnet_id     = aws_subnet.public_subnet_a.id #aws_subnet.subnet_1.id
+  subnet_id     = aws_subnet.public_subnet_uno.id #aws_subnet.subnet_1.id
 
-  vpc_security_group_ids = [aws_security_group.allow_ssh_mr1.id]
+  vpc_security_group_ids = [aws_security_group.allow_ssh_docker.id]
   #vpc_security_group_ids = [aws_security_group.allow_ssh2.id, aws_security_group.allow_http_https.id]
 
 
   associate_public_ip_address = true
 
-  depends_on = [aws_security_group.allow_ssh_mr1]
+  depends_on = [aws_security_group.allow_ssh_docker]
 
 
 
@@ -123,4 +123,82 @@ resource "aws_security_group" "allow_mysql2" {
     Name = "Allow MySQL"
   }
 }
+*/
+
+/*
+provider "aws" {
+  region = "us-east-1" # Cambia esto por tu región
+}
+
+resource "aws_instance" "app_instance" {
+  ami           = "ami-0c02fb55956c7d316" # Amazon Linux 2, cambia según tu preferencia
+  instance_type = "t2.micro"
+  key_name      = "your-key-pair" # Cambia por el nombre de tu par de claves
+  security_groups = [aws_security_group.app_sg.name]
+
+  tags = {
+    Name = "docker-app-instance"
+  }
+
+  provisioner "file" {
+    source      = "install.yml"
+    destination = "/home/ubuntu/install.yml"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update -y",
+      "sudo apt-get install -y ansible",
+      "ansible-playbook /home/ubuntu/install.yml"
+    ]
+  }
+}
+
+resource "aws_security_group" "app_sg" {
+  name_prefix = "docker-app-sg-"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8081
+    to_port     = 8081
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 27017
+    to_port     = 27017
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+
 */
