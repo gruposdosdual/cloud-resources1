@@ -10,6 +10,7 @@ spec:
   - ReadWriteOnce
   hostPath:
     path: "/mnt/data"
+    # storageClassName: ""
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -21,3 +22,4 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  # volumeName: "pv-example"
