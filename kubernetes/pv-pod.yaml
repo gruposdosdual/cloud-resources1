@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pv-pod
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: [ "sh", "-c", "while true; do echo Hello Kubernetes! > /data/hello.txt; sleep 5; done;" ]
+    volumeMounts:
+    - mountPath: "/data"
+      name: data-volume
+  volumes:
+  - name: data-volume
+    persistentVolumeClaim:
+      claimName: pvc-example
