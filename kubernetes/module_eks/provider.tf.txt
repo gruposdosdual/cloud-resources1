@@ -1,0 +1,4 @@
+provider "kubernetes" {
+  config_path = "~/.kube/config"  # Ruta absoluta al kubeconfig
+  config_context = "mi-cluster-jgl"  # Nombre del contexto del clúster
+}

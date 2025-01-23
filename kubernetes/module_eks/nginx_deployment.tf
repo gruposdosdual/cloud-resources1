@@ -1,3 +1,9 @@
+provider "kubernetes" {
+    config_path = "/home/javier/.kube/config"
+    #config_context = "mi-cluster-jgl"  # Nombre del contexto del clúster
+}
+
+
 resource "kubernetes_deployment" "nginx" {
   metadata {
     name = "nginx-deployment"
@@ -27,7 +33,7 @@ resource "kubernetes_deployment" "nginx" {
           image = "nginx:latest"
           name  = "nginx"
 
-          ports {
+          port {
             container_port = 80
           }
         }
@@ -35,3 +41,5 @@ resource "kubernetes_deployment" "nginx" {
     }
   }
 }
+
+
