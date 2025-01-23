@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemonset-example
+  labels:
+    app: daemonset-example
+spec:
+  selector:
+    matchLabels:
+      app: daemonset-example
+  template:
+    metadata:
+      labels:
+        app: daemonset-example
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command:
+        - sh
+        - -c
+        - "while true; do echo DaemonSet pod running on $(hostname); sleep 5; done;"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
