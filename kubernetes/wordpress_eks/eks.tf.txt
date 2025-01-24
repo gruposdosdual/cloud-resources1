@@ -1,0 +1,28 @@
+provider "aws" {
+  region = "eu-west-3"
+  profile = "248189943700_EKS-alumnos"
+}
+
+
+resource "aws_eks_cluster" "wordpress" {
+  name     = "wordpress-cluster"
+  role_arn = aws_iam_role.eks_cluster.arn
+
+  vpc_config {
+    subnet_ids = ["subnet-0ca2066e2d5f1a1cd", "subnet-03e43c39b3e2b6adc"]
+  }
+}
+
+resource "aws_eks_node_group" "wordpress" {
+  cluster_name    = aws_eks_cluster.wordpress.name
+  node_group_name = "wordpress-nodes"
+  
+  node_role_arn   = aws_iam_role.eks_nodes.arn
+  subnet_ids      = ["subnet-0ca2066e2d5f1a1cd", "subnet-03e43c39b3e2b6adc"]
+
+  scaling_config {
+    desired_size = 2
+    max_size     = 4
+    min_size     = 1
+  }
+}

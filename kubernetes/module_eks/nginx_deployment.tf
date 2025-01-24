@@ -1,6 +1,6 @@
 provider "kubernetes" {
     config_path = "/home/javier/.kube/config"
-    #config_context = "mi-cluster-jgl"  # Nombre del contexto del clúster
+    #config_context = "mi-cluster-fjgl"  # Nombre del contexto del clúster
 }
 
 
