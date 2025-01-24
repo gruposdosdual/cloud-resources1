@@ -35,7 +35,7 @@ resource "kubernetes_deployment" "wordpress" {
 
           env {
             name  = "WORDPRESS_DB_HOST"
-            value = aws_db_instance.wordpress.endpoint
+            value = aws_db_instance.wordpress.endpoint  # wordpress-database-fjgl.cxjrz7nq1sva.eu-west-1.rds.amazonaws.com
           }
           
           env {
@@ -57,6 +57,7 @@ resource "kubernetes_deployment" "wordpress" {
   }
 }
 
+# Servicio de balanceador de carga
 resource "kubernetes_service" "wordpress" {
   metadata {
     name = "wordpress-service"

@@ -9,6 +9,12 @@ variable "db_password" {
   sensitive   = true
 }
 
+variable "environment" {
+  description = "Environment name (dev or prod)"
+  type        = string
+  default     = "dev"
+}
+
 /*
 variable "create_kms_alias" {
   description = "Determines if the KMS alias should be created"
@@ -16,9 +22,10 @@ variable "create_kms_alias" {
   default     = true
 }
 */
-
+/*
 variable "cluster_name" {
   description = "EKS cluster name"
   type        = string
   default     = "wp-cluster-fjgl"
 }
+*/
