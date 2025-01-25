@@ -1,18 +1,20 @@
 # Archivo outputs.tf
 output "eks_cluster_name" {
-  #value = aws_eks_cluster.wordpress.name
-  value = module.eks.cluster_id
+  value = aws_eks_cluster.wordpress.name  
+  #value = module.eks.cluster_id
 }
 
 output "eks_cluster_endpoint" {
-  #value = aws_eks_cluster.wordpress.endpoint
-  value = module.eks.cluster_endpoint
+  value = aws_eks_cluster.wordpress.endpoint
+  #value = module.eks.cluster_endpoint
 }
 
+/*
 output "eks_cluster_arn" {
   #value = aws_eks_cluster.wordpress.arn
   value = module.eks.cluster_arn
 }
+*/
 
 output "rds_endpoint" {
   value = aws_db_instance.wordpress.endpoint

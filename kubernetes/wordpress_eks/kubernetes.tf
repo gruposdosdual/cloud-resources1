@@ -1,7 +1,9 @@
+/*
 provider "kubernetes" {
     config_path = "/home/javier/.kube/config"
     #config_context = "mi-cluster-fjgl"  # Nombre del contexto del clúster
 }
+*/
 
 /*
 resource "kubernetes_secret" "wordpress_db" {
@@ -49,6 +51,7 @@ resource "kubernetes_deployment" "wordpress" {
           env {
             name  = "WORDPRESS_DB_HOST"
             value = aws_db_instance.wordpress.endpoint  # wordpress-database-fjgl.cxjrz7nq1sva.eu-west-1.rds.amazonaws.com
+            #value = "${aws_db_instance.wordpress.endpoint}:3306"
           }
           
           env {
@@ -60,6 +63,12 @@ resource "kubernetes_deployment" "wordpress" {
             name  = "WORDPRESS_DB_PASSWORD"
             value = var.db_password
           }
+          
+          # Nuevo: configuración de base de datos
+          env {
+            name  = "WORDPRESS_DB_NAME"
+            value = "wordpress"
+          }          
 
           port {
             container_port = 80

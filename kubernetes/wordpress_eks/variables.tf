@@ -31,12 +31,13 @@ variable "public_subnet_ids" {
   type = list(string)
 }
 
+/*
 variable "environment" {
   description = "Environment name (dev or prod)"
   type        = string
   default     = "dev"
 }
-
+*/
 /*
 variable "create_kms_alias" {
   description = "Determines if the KMS alias should be created"
