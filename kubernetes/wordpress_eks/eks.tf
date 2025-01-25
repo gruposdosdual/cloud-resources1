@@ -11,6 +11,14 @@ resource "aws_eks_cluster" "wordpress" {
   version  = "1.32"
   role_arn = aws_iam_role.eks_cluster.arn
 
+  enabled_cluster_log_types = [
+    "api", 
+    "audit", 
+    "authenticator", 
+    "controllerManager", 
+    "scheduler"
+  ]
+
   vpc_config {
     subnet_ids              = var.public_subnet_ids
     security_group_ids = [aws_security_group.eks_sg.id]

@@ -9,12 +9,7 @@ output "eks_cluster_endpoint" {
   #value = module.eks.cluster_endpoint
 }
 
-/*
-output "eks_cluster_arn" {
-  #value = aws_eks_cluster.wordpress.arn
-  value = module.eks.cluster_arn
-}
-*/
+
 
 output "rds_endpoint" {
   value = aws_db_instance.wordpress.endpoint
@@ -22,7 +17,15 @@ output "rds_endpoint" {
 
 output "wordpress_service_url" {
   value = kubernetes_service.wordpress.status[0].load_balancer[0].ingress[0].hostname
+
 }
+
+/*
+output "eks_cluster_arn" {
+  #value = aws_eks_cluster.wordpress.arn
+  value = module.eks.cluster_arn
+}
+*/
 
 /*
 output "wordpress_service_url" {
