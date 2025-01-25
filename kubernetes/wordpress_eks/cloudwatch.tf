@@ -1,6 +1,7 @@
 resource "aws_cloudwatch_log_group" "eks_logs" {
+  name              = "/aws/eks/${var.cluster_name}/cluster"
   #name              = "/aws/eks/wordpress-cluster/cluster"
-  name              = "/aws/eks/mi-cluster-fjgl-v/cluster-v3"
+  #name              = "/aws/eks/mi-cluster-fjgl-v/cluster-v3"
   retention_in_days = 30
 }
 

@@ -3,6 +3,19 @@ provider "kubernetes" {
     #config_context = "mi-cluster-fjgl"  # Nombre del contexto del clúster
 }
 
+/*
+resource "kubernetes_secret" "wordpress_db" {
+  metadata {
+    name = "wordpress-db-credentials"
+  }
+
+  data = {
+    DB_HOST     = aws_db_instance.wordpress.endpoint
+    DB_USER     = var.db_username
+    DB_PASSWORD = var.db_password
+  }
+}
+*/
 
 
 resource "kubernetes_deployment" "wordpress" {

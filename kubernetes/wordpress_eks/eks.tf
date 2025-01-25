@@ -3,18 +3,50 @@ provider "aws" {
   profile = "248189943700_EKS-alumnos"
 }
 
+
+# Crear cluster eks
+resource "aws_eks_cluster" "wordpress" {
+  name     = var.cluster_name
+  version  = "1.32"
+  role_arn = aws_iam_role.eks_cluster.arn
+
+  vpc_config {
+    subnet_ids              = var.public_subnet_ids
+    security_group_ids = [aws_security_group.eks_sg.id]
+    endpoint_private_access = true
+    endpoint_public_access  = true
+  }
+}
+
+# Crear un grupo de nodos
+
+resource "aws_eks_node_group" "wordpress" {
+  cluster_name    = aws_eks_cluster.wordpress.name
+  node_group_name = "wordpress-nodes-jgl"
+  node_role_arn   = aws_iam_role.eks_nodes.arn
+  subnet_ids      = var.public_subnet_ids
+
+  scaling_config {
+    desired_size = 2
+    max_size     = 3
+    min_size     = 1
+  }
+}
+
+
+/*
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 19.0" 
 
 
-  cluster_name    = "mi-cluster-fjgl-v3"
+  cluster_name    = var.cluster_name
   cluster_version = "1.31"
 
   
-  vpc_id      = "vpc-0aad847febf809cf4"
+  vpc_id      = var.vpc_id
 
-  subnet_ids =["subnet-03f5b0dc5550de2c4", "subnet-0ece7ad592169689c", "subnet-0de031bfa5831cae1"]
+  #public_subnet_ids = var.public_subnet_ids
 
   
 
@@ -29,5 +61,5 @@ module "eks" {
     }
   }
 }
-
+*/
 

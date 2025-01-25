@@ -1,3 +1,13 @@
+variable "region" {
+  default = "eu-west-1"
+}
+
+variable "cluster_name" {
+  description = "Cluster name"
+}
+
+
+
 variable "db_username" {
   description = "Database administrator username"
   type        = string
@@ -7,6 +17,18 @@ variable "db_password" {
   description = "Database administrator password"
   type        = string
   sensitive   = true
+}
+
+variable "vpc_id" {
+  description = "VPC ID for resources"
+}
+
+variable "private_subnet_ids" {
+  type = list(string)
+}
+
+variable "public_subnet_ids" {
+  type = list(string)
 }
 
 variable "environment" {

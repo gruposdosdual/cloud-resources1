@@ -18,6 +18,10 @@ output "rds_endpoint" {
   value = aws_db_instance.wordpress.endpoint
 }
 
+output "wordpress_service_url" {
+  value = kubernetes_service.wordpress.status[0].load_balancer[0].ingress[0].hostname
+}
+
 /*
 output "wordpress_service_url" {
   #value = kubernetes_service.wordpress.status.load_balancer.ingress[0].hostname
