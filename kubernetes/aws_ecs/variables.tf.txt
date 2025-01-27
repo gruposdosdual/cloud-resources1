@@ -9,6 +9,14 @@ variable "environment" {
 }
 
 variable "container_insight_status" {
+  description = "Enable or disable container insights"
+  type        = string
+  default     = "disabled"  # Puede ser "enabled" o "disabled"
+}
+
+
+/*
+variable "container_insight_status" {
   description = "Estado de los container insights"
   type        = object({
     disable = string
@@ -17,7 +25,7 @@ variable "container_insight_status" {
     disable = "false"
   }
 }
-
+*/
 
 
 /*
