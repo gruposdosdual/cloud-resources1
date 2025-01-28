@@ -4,17 +4,30 @@ resource "aws_vpc" "my_vpc" {
   enable_dns_hostnames = true
 }
 
-resource "aws_subnet" "my_subnet_public" {
+resource "aws_subnet" "my_subnet_public_a" {
   vpc_id                  = aws_vpc.my_vpc.id
-  cidr_block              = var.public_subnet_cidr
-  availability_zone       = var.availability_zone
+  cidr_block              = var.public_subnet_cidr_a
+  availability_zone       = var.availability_zone_a
   map_public_ip_on_launch = true
 }
 
-resource "aws_subnet" "my_subnet_private" {
+resource "aws_subnet" "my_subnet_public_b" {
+  vpc_id                  = aws_vpc.my_vpc.id
+  cidr_block              = var.public_subnet_cidr_b
+  availability_zone       = var.availability_zone_b
+  map_public_ip_on_launch = true
+}
+
+resource "aws_subnet" "my_subnet_private_a" {
   vpc_id            = aws_vpc.my_vpc.id
-  cidr_block        = var.private_subnet_cidr
-  availability_zone = var.availability_zone
+  cidr_block        = var.private_subnet_cidr_a
+  availability_zone = var.availability_zone_a
+}
+
+resource "aws_subnet" "my_subnet_private_b" {
+  vpc_id            = aws_vpc.my_vpc.id
+  cidr_block        = var.private_subnet_cidr_b
+  availability_zone = var.availability_zone_b
 }
 
 resource "aws_security_group" "eks_security_group" {
@@ -25,13 +38,15 @@ resource "aws_security_group" "eks_security_group" {
 resource "aws_eks_cluster" "my_eks_cluster" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_role.arn
+  
   vpc_config {
     subnet_ids = [
-      aws_subnet.my_subnet_public.id,
-      aws_subnet.my_subnet_private.id
+      aws_subnet.my_subnet_private_a.id,
+      aws_subnet.my_subnet_private_b.id
     ]
   }
 }
+
 
 resource "aws_iam_role" "eks_role" {
   name = "eks-role"
@@ -55,7 +70,10 @@ resource "aws_eks_node_group" "eks_nodes" {
   cluster_name    = aws_eks_cluster.my_eks_cluster.name
   node_group_name = "eks-node-group"
   node_role_arn   = aws_iam_role.eks_node_role.arn
-  subnet_ids      = [aws_subnet.my_subnet_public.id, aws_subnet.my_subnet_private.id]
+  subnet_ids      = [
+    aws_subnet.my_subnet_public_a.id,
+    aws_subnet.my_subnet_public_b.id
+  ]
   scaling_config {
     desired_size = 2
     max_size     = 3

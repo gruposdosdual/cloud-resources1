@@ -1,6 +1,6 @@
 module "ecr" {
-  source        = "modules/ecr"
-  repository_name = "app-ecr-repo"
+  source        = "./modules_ecr"
+  #repository_name = "app-ecr-repo"
   account_id     = "248189943700"
 }
 
