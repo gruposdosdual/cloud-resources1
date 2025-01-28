@@ -2,10 +2,10 @@ version: '3.9'
 
 services:
   frontend:
-    image: nginx:alpine  # Imagen del frontend (NGINX) 248189943700.dkr.ecr.eu-west-1.amazonaws.com/ecr-jgl:latest
+    image: 248189943700.dkr.ecr.eu-west-1.amazonaws.com/ecr-jgl:latest
     container_name: frontend
     ports:
-      - "8081:80"  # Expone el frontend en el puerto 8080
+      - "8080:80"  # Expone el frontend en el puerto 8080
     volumes:
       - ./frontend:/usr/share/nginx/html  # Mapea los archivos estáticos al contenedor
       - ./frontend/nginx.conf:/etc/nginx/nginx.conf  # Configuración personalizada de NGINX
