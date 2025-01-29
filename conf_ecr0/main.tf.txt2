@@ -1,0 +1,95 @@
+provider "aws" {
+  region = "eu-west-1"
+}
+
+# ECR Repository
+resource "aws_ecr_repository" "ecr_jgl" {
+  name = "ecrr-jgl"
+  
+  tags = {
+    Name        = "ecrr-jgl"
+    Environment = "dev"
+  }
+}
+
+# ECR Lifecycle Policy
+resource "aws_ecr_lifecycle_policy" "ecr_lifecycle" {
+  repository = aws_ecr_repository.ecr_jgl.name
+
+  policy = jsonencode({
+    rules = [
+      {
+        rulePriority = 1
+        description  = "Retain only 5 images"
+        selection = {
+          tagStatus   = "any"
+          countType   = "imageCountMoreThan"
+          countNumber = 5
+        }
+        action = {
+          type = "expire"
+        }
+      }
+    ]
+  })
+}
+
+# IAM Role for ECS Task Execution
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name = "ecsTaskExecutionRole"
+  
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+# SSM Parameter
+resource "aws_ssm_parameter" "api_key" {
+  name        = "/myapp/api_key"
+  description = "API Key for my application"
+  type        = "SecureString"
+  value       = "my-secure-api-key"
+  
+  tags = {
+    Name        = "api_key"
+    Environment = "dev"
+  }
+}
+
+# Secrets Manager Secret
+resource "aws_secretsmanager_secret" "db_credentials" {
+  name = "db_credentials"
+  
+  tags = {
+    Name        = "db_credentials"
+    Environment = "dev"
+  }
+}
+
+resource "aws_secretsmanager_secret_version" "db_credentials_version" {
+  secret_id     = aws_secretsmanager_secret.db_credentials.id
+  secret_string = jsonencode({
+    username = "admin"
+    password = "password123"
+    host     = "mydb"
+    port     = 5432
+  })
+}
+
+output "ecr_repository_url" {
+  value = aws_ecr_repository.ecr_jgl.repository_url
+}

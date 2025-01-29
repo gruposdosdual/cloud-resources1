@@ -1,14 +1,29 @@
-variable "account_id" {
-  description = "AWS Account ID"
+variable "aws_region" {
+  description = "AWS region"
   type        = string
-}
-
-variable "region" {
-  description = "La región de AWS"
   default     = "eu-west-1"
 }
 
+variable "environment" {
+  description = "Environment name"
+  type        = string
+  default     = "dev"
+}
+
 variable "repository_name" {
-  description = "El nombre del repositorio ECR"
-  default     = "my-ecr-repo"
+  description = "Name of the ECR repository"
+  type        = string
+  default     = "ecr-jgl"
+}
+
+variable "api_key" {
+  description = "API Key for the application"
+  type        = string
+  sensitive   = true
+}
+
+variable "db_password" {
+  description = "Database password"
+  type        = string
+  sensitive   = true
 }

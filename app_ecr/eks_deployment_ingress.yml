@@ -1,0 +1,65 @@
+---
+# 1️⃣ Crear un Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mi-aplicacion
+---
+# 2️⃣ Definir un Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi-app
+  namespace: mi-aplicacion
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mi-app
+  template:
+    metadata:
+      labels:
+        app: mi-app
+    spec:
+      containers:
+      - name: mi-app
+        image: 248189943700..dkr.ecr.eu-west-1.amazonaws.com/my-ecr-repo:latest
+        ports:
+        - containerPort: 80
+---
+# 3️⃣ Crear un Service tipo LoadBalancer
+apiVersion: v1
+kind: Service
+metadata:
+  name: mi-app-service
+  namespace: mi-aplicacion
+spec:
+  selector:
+    app: mi-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
+---
+# 4️⃣ Configurar Ingress Controller
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mi-app-ingress
+  namespace: mi-aplicacion
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+spec:
+  rules:
+  - host: mi-app.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: mi-app-servi
+            port:
+              number: 80
