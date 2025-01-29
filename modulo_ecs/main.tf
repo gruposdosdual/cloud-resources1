@@ -55,10 +55,21 @@ resource "aws_ecs_task_definition" "mi_primer_task" {
   execution_role_arn       = "${aws_iam_role.ecsTaskExecutionRole.arn}"
 }
 
+
+
 resource "aws_iam_role" "ecsTaskExecutionRole" {
-  name               = "ecsTaskExecutionRole"
-  assume_role_policy = "${data.aws_iam_policy_document.assume_role_policy.json}"
+  name               = "ecsTaskExecutionRoleUnique"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
+
+
+
+/*
+data "aws_iam_role" "ecsTaskExecutionRole" {
+  name = "ecsTaskExecutionRole"
+}
+*/
+
 
 data "aws_iam_policy_document" "assume_role_policy" {
   statement {
@@ -75,6 +86,39 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
   role       = "${aws_iam_role.ecsTaskExecutionRole.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
+
+# ------------------------------
+# Crear una política de IAM para permisos de autoescalado y ECS
+resource "aws_iam_policy" "ecs_scaling_policy" {
+  name        = "ecsScalingPolicy"
+  description = "Política para permitir el autoescalado de ECS y otros permisos relacionados"
+  
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "application-autoscaling:RegisterScalableTarget",
+          "application-autoscaling:PutScalingPolicy",
+          "ecs:DescribeServices",
+          "ecs:UpdateService"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# Asociar la política creada al rol de ejecución de ECS
+resource "aws_iam_role_policy_attachment" "ecs_scaling_policy_attachment" {
+  role       = aws_iam_role.ecsTaskExecutionRole.name  # Usa el nombre de tu rol de ejecución
+  policy_arn = aws_iam_policy.ecs_scaling_policy.arn
+}
+
+# ---------------------------------------------------------------
+
+
 
 resource "aws_alb" "application_load_balancer" {
   name               = "test-lb-tf" # testea el load balancer
@@ -132,7 +176,7 @@ resource "aws_ecs_service" "mi_primer_service" {
 
   load_balancer {
     target_group_arn = "${aws_lb_target_group.target_group.arn}" 
-    container_name   = "${aws_ecs_task_definition.mi_primer_task.family}"
+    container_name   = "mi-primer-task"  #"${aws_ecs_task_definition.mi_primer_task.family}"
     container_port   = 3000 
   }
 
@@ -159,3 +203,4 @@ resource "aws_security_group" "service_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
