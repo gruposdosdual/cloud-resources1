@@ -7,6 +7,8 @@ provider "random" {}
 
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
+  enable_dns_hostnames = true
+  enable_dns_support = true
 }
 
 resource "aws_internet_gateway" "main" {
@@ -33,14 +35,26 @@ resource "aws_subnet" "subnet_2" {
   }
 }
 
-/*
-resource "aws_subnet" "ecs_subnet" {
+resource "aws_subnet" "rds_subnet_1" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.1.0/24"
+  cidr_block        = "10.0.4.0/24"
   availability_zone = "eu-west-1a"
-}
-*/
 
+  tags = {
+    Name = "RDS Subnet 1"
+  }
+}
+
+resource "aws_subnet" "rds_subnet_2" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.5.0/24"
+  availability_zone = "eu-west-1b"
+
+  tags = {
+    Name = "RDS Subnet 2"
+  }
+}
+/*
 resource "aws_subnet" "rds_subnet" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.4.0/24"
@@ -49,7 +63,7 @@ resource "aws_subnet" "rds_subnet" {
     Name = "RDS Subnet"
   }
 }
-
+*/
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
@@ -114,7 +128,7 @@ resource "aws_db_instance" "rds" {
 
 resource "aws_db_subnet_group" "rds_subnet_group" {
   name       = "rds_subnet_group"
-  subnet_ids = [aws_subnet.rds_subnet.id, aws_subnet.subnet_2.id]
+  subnet_ids = [aws_subnet.rds_subnet_1.id, aws_subnet.rds_subnet_2.id]
 
   tags = {
     Name = "My RDS Subnet Group"

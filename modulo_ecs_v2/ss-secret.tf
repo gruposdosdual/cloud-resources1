@@ -58,3 +58,86 @@ resource "aws_iam_role_policy_attachment" "ecs_secrets_attach" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = aws_iam_policy.ecs_secrets_policy.arn
 }
+
+resource "aws_iam_policy" "application_autoscaling_policy" {
+  name        = "ApplicationAutoScalingPolicy"
+  description = "Policy to allow Application Auto Scaling actions"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "application-autoscaling:RegisterScalableTarget",
+          "application-autoscaling:DeregisterScalableTarget",
+          "application-autoscaling:PutScalingPolicy"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_application_autoscaling_policy" {
+  role       = aws_iam_role.ecs_task_execution_role.name  # Cambia esto si usas otro rol
+  policy_arn = aws_iam_policy.application_autoscaling_policy.arn
+}
+
+/*
+resource "aws_iam_role_policy_attachment" "attach_application_autoscaling_policy" {
+  role       = aws_iam_role.ecs_task_execution_role.name  # Cambia esto si usas otro rol
+  policy_arn = aws_iam_policy.application_autoscaling_policy.arn
+}
+*/
+
+
+/*
+# Nueva política para Auto Scaling
+resource "aws_iam_policy" "autoscaling_policy" {
+  name        = "ECSAutoScalingPolicy-${random_string.suffix.result}"
+  description = "Policy that allows auto scaling of ECS services"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "application-autoscaling:*",
+          "ecs:DescribeServices",
+          "ecs:UpdateService",
+          "cloudwatch:PutMetricAlarm",
+          "cloudwatch:DescribeAlarms",
+          "cloudwatch:DeleteAlarms"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# Rol específico para Auto Scaling
+resource "aws_iam_role" "autoscaling_role" {
+  name = "ECSAutoScalingRole-${random_string.suffix.result}"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "application-autoscaling.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+# Adjuntar la política de Auto Scaling al rol
+resource "aws_iam_role_policy_attachment" "autoscaling_policy_attach" {
+  role       = aws_iam_role.autoscaling_role.name
+  policy_arn = aws_iam_policy.autoscaling_policy.arn
+}
+*/
