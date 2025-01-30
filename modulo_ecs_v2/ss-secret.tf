@@ -15,7 +15,7 @@ data "aws_secretsmanager_secret_version" "db_credentials" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecsTaskExecutionRole"
+  name = "ecsTaskExecutionRole-${random_string.suffix.result}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -27,8 +27,19 @@ resource "aws_iam_role" "ecs_task_execution_role" {
   })
 }
 
+resource "random_string" "suffix" {
+  length  = 8
+  special = false
+  upper   = false
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
 resource "aws_iam_policy" "ecs_secrets_policy" {
-  name        = "ecsSecretsPolicy"
+  name        = "ecsSecretsPolicy-${random_string.suffix.result}"
   description = "Allow ECS tasks to access Secrets Manager"
   
   policy = jsonencode({
