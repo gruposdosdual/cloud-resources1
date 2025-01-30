@@ -33,12 +33,15 @@ resource "aws_iam_policy" "github_ecr_policy" {
       {
         Effect = "Allow"
         Action = [
+          "sts:AssumeRole",
           "ecr:GetAuthorizationToken",
           "ecr:BatchCheckLayerAvailability",
           "ecr:PutImage",
           "ecr:InitiateLayerUpload",
           "ecr:UploadLayerPart",
-          "ecr:CompleteLayerUpload"
+          "ecr:CompleteLayerUpload",
+          "ecs:UpdateService",
+          "ecs:DescribeServices"
         ]
         Resource = "*"
       }
