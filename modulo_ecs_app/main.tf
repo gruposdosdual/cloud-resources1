@@ -165,9 +165,10 @@ resource "aws_ecs_task_definition" "ecs_task" {
 
 
 module "alb" {
-  source = "./modulo-ecs-app"
+  source = "./alb"  # Referencia al submódulo alb
 }
 
+/*
 
 resource "aws_ecs_service" "ecs_service" {
   name            = "xxx-ecs-service"
@@ -189,3 +190,4 @@ resource "aws_ecs_service" "ecs_service" {
       container_port   = 80
     }
   }
+*/
