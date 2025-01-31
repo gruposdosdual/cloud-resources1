@@ -127,7 +127,7 @@ resource "aws_db_instance" "rds" {
 }
 
 resource "aws_db_subnet_group" "rds_subnet_group" {
-  name       = "rds_subnet_group"
+  name       = "rds_subnet_group-${terraform.workspace}"
   subnet_ids = [aws_subnet.rds_subnet_1.id, aws_subnet.rds_subnet_2.id]
 
   tags = {
@@ -150,9 +150,20 @@ resource "aws_ecs_task_definition" "ecs_task" {
   container_definitions = jsonencode([
     {
       name  = "my-container"
-      image = "248189943700.dkr.ecr.eu-west-1.amazonaws.com/my-repo:latest"
+      image = "248189943700.dkr.ecr.eu-west-1.amazonaws.com/my_app_repo:latest"
       memory = 512
       cpu    = 256
+      essential = true
+
+      portMappings = [
+        {
+          containerPort = 80   
+          hostPort = 80       
+          protocol = "http"
+        }
+      ]
+
+
       environment = [
         {
           name  = "DATABASE_URL"
@@ -163,11 +174,11 @@ resource "aws_ecs_task_definition" "ecs_task" {
   ])
 }
 
-
+/*
 module "alb" {
   source = "./alb"  # Referencia al submódulo alb
 }
-
+*/
 /*
 
 resource "aws_ecs_service" "ecs_service" {

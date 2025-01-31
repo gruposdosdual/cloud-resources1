@@ -1,5 +1,5 @@
 resource "aws_secretsmanager_secret" "db_secret" {
-  name = "my-db-credentials"
+  name = "my-db-credentials-${terraform.workspace}"
 }
 
 resource "aws_secretsmanager_secret_version" "db_credentials" {
@@ -54,6 +54,7 @@ resource "aws_iam_policy" "ecs_secrets_policy" {
   })
 }
 
+/*
 resource "aws_iam_role_policy_attachment" "ecs_secrets_attach" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = aws_iam_policy.ecs_secrets_policy.arn
@@ -83,6 +84,7 @@ resource "aws_iam_role_policy_attachment" "attach_application_autoscaling_policy
   role       = aws_iam_role.ecs_task_execution_role.name  # Cambia esto si usas otro rol
   policy_arn = aws_iam_policy.application_autoscaling_policy.arn
 }
+*/
 
 /*
 resource "aws_iam_role_policy_attachment" "attach_application_autoscaling_policy" {
