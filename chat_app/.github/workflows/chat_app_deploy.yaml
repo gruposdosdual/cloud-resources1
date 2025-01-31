@@ -3,7 +3,7 @@ name: Deploy Chat App
 on:
   push:
     branches:
-    - main
+    - dev
 
 jobs:
   terraform:
