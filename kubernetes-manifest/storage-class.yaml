@@ -1,0 +1,8 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp2 # Nombre del StorageClass
+provisioner: kubernetes.io/aws-ebs # Proveedor de almacenamiento para EBS
+parameters:
+  type: gp2 # Tipo de volumen EBS (puedes elegir entre gp2, io1, st1, etc.)
+  fsType: ext4 # Sistema de archivos a utilizar en el volumen EBS

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv
+spec:
+  capacity:
+    storage: 1Gi # Tamaño del volumen
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain # Política de reclamación del volumen
+  storageClassName: standard # El almacenamiento estándar de Kubernetes
+  hostPath:
+    path: /mnt/data # Ruta en el host para el volumen persistente (esto se usa en entornos locales)
