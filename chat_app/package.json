@@ -1,0 +1,13 @@
+{
+    "name": "chat-app",
+    "version": "1.0.0",
+    "description": "A simple chat app using WebSockets",
+    "main": "index.js",
+    "dependencies": {
+      "ws": "^8.7.0"
+    },
+    "scripts": {
+      "start": "node index.js"
+    }
+  }
+  
