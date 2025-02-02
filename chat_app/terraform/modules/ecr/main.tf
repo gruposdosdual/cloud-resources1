@@ -1,9 +1,9 @@
 resource "aws_ecr_repository" "this" {
-  name = "chat-app"
+  name = "chat-app-repo"
 }
 
 resource "aws_ecr_lifecycle_policy" "this" {
-  repository_name = aws_ecr_repository.this.name
+  repository = aws_ecr_repository.this.name
   policy          = jsonencode({
     rules = [
       {

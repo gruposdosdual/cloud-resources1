@@ -4,6 +4,8 @@
     "description": "A simple chat app using WebSockets",
     "main": "index.js",
     "dependencies": {
+      "express": "^4.18.2",
+      "socket.io": "^4.6.1",  
       "ws": "^8.7.0"
     },
     "scripts": {

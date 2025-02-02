@@ -39,7 +39,7 @@ resource "aws_internet_gateway" "this" {
 
 # NAT Gateway para las subnets privadas
 resource "aws_eip" "this" {
-  vpc = true
+  domain = "vpc" # vpc = true   # esta deprecado
 }
 
 resource "aws_nat_gateway" "this" {

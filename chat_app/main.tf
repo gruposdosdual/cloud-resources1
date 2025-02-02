@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "./modules/vpc"
+  source = "./terraform/modules/vpc"
 
   cidr_block                = "10.0.0.0/16"
   public_subnet_cidr_blocks = ["10.0.1.0/24", "10.0.2.0/24"]
@@ -28,30 +28,52 @@ output "security_group_id" {
 
 
 module "eks_cluster" {
-  source = "./modules/eks-cluster"
-  cluster_name = var.cluster_name
-  region       = var.aws_region
+  source = "./terraform/modules/eks-cluster"
+  cluster_name = var.cluster_name  
+
+  # Obtiene las subnets del módulo de VPC
+  subnet_ids = module.vpc.private_subnet_ids
+
+  # Obtiene el rol de IAM del módulo correspondiente
+  iam_role_arn = module.iam_roles.cluster_role_arn
 }
 
 module "eks_node_group" {
-  source = "./modules/eks-node-group"
+  source = "./terraform/modules/eks-node-group"
   cluster_name = module.eks_cluster.cluster_name
-  node_group_name = var.node_group_name
-  region = var.aws_region
+
+  # Obtiene las subnets desde el módulo VPC
+  subnet_ids = module.vpc.private_subnet_ids
+
+   # Obtiene el rol de IAM del módulo IAM
+  node_role_arn = module.iam_roles.node_role_arn
+
+  node_group_name = "chat-app-nodes"  #var.node_group_name 
+  
 }
 
 module "alb" {
-  source = "./modules/alb"
-  region = var.aws_region
+  source = "./terraform/modules/alb"  
   cluster_name = module.eks_cluster.cluster_name
+  
+  # Obtiene la VPC desde el módulo de VPC
+  vpc_id = module.vpc.vpc_id
+
+  # Obtiene las subnets públicas de la VPC
+  subnets = module.vpc.public_subnet_ids
+
+  # Obtiene los grupos de seguridad adecuados
+  security_groups = [module.vpc.security_group_id]  #[module.security_group.alb_sg_id]
+
 }
 
 module "ecr" {
-  source = "./modules/ecr"
+  source = "./terraform/modules/ecr"
   region = var.aws_region
 }
 
 module "iam_roles" {
-  source = "./modules/iam-roles"
-  region = var.aws_region
+  source = "./terraform/modules/iam-roles"
+
+  role_name = "chat-app-eks-role" #var.aws_iam_role.role_name  
 }

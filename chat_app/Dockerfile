@@ -1,12 +1,12 @@
 # Usamos una imagen base de Node.js
-FROM node:16
+FROM node:18-alpine
 
 # Definimos el directorio de trabajo
 WORKDIR /usr/src/app 
 
 # Copiamos el archivo package.json y lo instalamos
 COPY package*.json ./
-RUN npm install
+RUN npm install --only=production
 
 # Copiamos todo el código de la aplicación al contenedor desde nuestra carpeta en vs code
 COPY . .
