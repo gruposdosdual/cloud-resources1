@@ -33,6 +33,23 @@ jobs:
       working-directory: chat_app
       run: terraform init -backend-config="bucket=mi-terraform-tfstate-248189943700" -backend-config="key=terraform/state/terraform.tfstate" -backend-config="region=eu-west-1"
 
+    # Paso para importar el repositorio de ECR ya existente
+    - name: Import ECR Repository (if exists)
+      working-directory: chat_app
+      run: terraform import aws_ecr_repository.chat-app-repo 248189943700.dkr.ecr.eu-west-1.amazonaws.com/chat-app-repo || true  # El "|| true" hace que ignore el error si el recurso no existe
+
+    # Paso para importar los roles IAM si existen
+    - name: Import IAM Roles (if exist)
+      working-directory: chat_app
+      run: |
+        terraform import aws_iam_role.cluster_role arn:aws:iam::248189943700:role/chat-app-eks-role-cluster || true
+        terraform import aws_iam_role.node_role arn:aws:iam::248189943700:role/chat-app-eks-role-node || true
+
+    # Paso para importar la VPC si ya existe
+    - name: Import VPC (if exists)
+      working-directory: chat_app
+      run: terraform import aws_vpc.this vpc-0b690e66858f12ecc || true  # Reemplaza "vpc-xxxxxxxx" con tu ID de VPC
+
     - name: Validate Terraform configuration
       working-directory: chat_app
       run: terraform validate
