@@ -13,6 +13,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Verificar archivos en el runner
+      run: ls -R
+
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v1
       with:
@@ -27,24 +30,20 @@ jobs:
           aws-region: eu-west-1  # Cambia esto a tu región deseada
 
     - name: Initialize Terraform
-      run: |
-        cd chat_app/terraform
-        terraform init
+      working-directory: chat_app/terraform
+      run: terraform init
 
     - name: Validate Terraform configuration
-      run: |
-        cd chat_app/terraform
-        terraform validate
+      working-directory: chat_app/terraform
+      run: terraform validate
 
     - name: Plan Terraform
-      run: |
-        cd chat_app/terraform
-        terraform plan
+      working-directory: chat_app/terraform
+      run: terraform plan
 
     - name: Apply Terraform
-      run: |
-        cd chat_app/terraform
-        terraform apply -auto-approve
+      working-directory: chat_app/terraform
+      run: terraform apply -auto-approve
 
   docker:
     runs-on: ubuntu-latest
@@ -95,7 +94,7 @@ jobs:
 
     - name: Deploy to Kubernetes
       run: |
-        cd k8s    
+        cd chat_app/k8s    
         kubectl apply -f chat-app-deployment.yaml  
         kubectl apply -f chat-app-service.yaml
         
