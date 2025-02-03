@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket         = "mi-terraform-tfstate"  # Nombre del bucket S3
+    bucket         = "mi-terraform-tfstate-248189943700"  # Nombre del bucket S3
     key            = "terraform/state/terraform.tfstate"  # Ruta dentro del bucket
     region         = "eu-west-1"  # Región de AWS
     encrypt        = true  # Cifrado en el bucket S3
