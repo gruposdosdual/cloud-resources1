@@ -29,6 +29,17 @@ jobs:
     - name: Initialize Terraform
       run: terraform init
 
+    - name: Validate Terraform configuration
+      run: terraform validate
+
+    - name: Destroy Terraform state
+      if: always()
+      run: terraform destroy --auto-approve
+
+    - name: Set up Terraform
+      run: |
+       cd chat_app/terraform
+
     - name: Plan Terraform
       run: terraform plan
 
@@ -69,6 +80,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token : ${{secrets.AWS_SESSION_TOKEN}}
         aws-region: eu-west-1  # Cambia esto a tu región deseada
 
     
