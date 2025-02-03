@@ -31,7 +31,7 @@ jobs:
 
     - name: Initialize Terraform
       working-directory: chat_app/terraform
-      run: terraform init
+      run: terraform init -backend-config="bucket=mi-terraform-tfstate-248189943700" -backend-config="key=terraform/state/terraform.tfstate" -backend-config="region=eu-west-1"
 
     - name: Validate Terraform configuration
       working-directory: chat_app/terraform
