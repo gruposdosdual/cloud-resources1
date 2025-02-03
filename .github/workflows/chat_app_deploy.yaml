@@ -34,7 +34,7 @@ jobs:
       run: terraform init -backend-config="bucket=mi-terraform-tfstate-248189943700" -backend-config="key=terraform/state/terraform.tfstate" -backend-config="region=eu-west-1"
 
     - name: Validate Terraform configuration
-      working-directory: chat_app/terraform
+      working-directory: chat_app
       run: terraform validate
 
     - name: Plan Terraform
