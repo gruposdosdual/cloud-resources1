@@ -3,7 +3,7 @@ variable "aws_region" {
   type        = string
   default     = "eu-west-1"
 }
-
+/*
 variable "aws_access_key_id" {
   description = "AWS Access Key ID"
   type        = string
@@ -22,7 +22,7 @@ variable "aws_session_token" {
   sensitive   = true
   default     = ""
 }
-
+*/
 variable "cluster_name" {
   description = "EKS Cluster name"
   type        = string
