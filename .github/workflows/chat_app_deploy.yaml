@@ -36,7 +36,7 @@ jobs:
     # Paso para importar el repositorio de ECR ya existente
     - name: Import ECR Repository (if exists)
       working-directory: chat_app
-      run: terraform import aws_ecr_repository.chat-app-repo 248189943700.dkr.ecr.eu-west-1.amazonaws.com/chat-app-repo || true  # El "|| true" hace que ignore el error si el recurso no existe
+      run: terraform import aws_ecr_repository.this 248189943700.dkr.ecr.eu-west-1.amazonaws.com/chat-app-repo || true  # El "|| true" hace que ignore el error si el recurso no existe
 
     # Paso para importar los roles IAM si existen
     - name: Import IAM Roles (if exist)
