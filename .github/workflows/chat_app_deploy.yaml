@@ -27,24 +27,24 @@ jobs:
           aws-region: eu-west-1  # Cambia esto a tu región deseada
 
     - name: Initialize Terraform
-      run: terraform init
+      run: |
+        cd chat_app/terraform
+        terraform init
 
     - name: Validate Terraform configuration
-      run: terraform validate
-
-    - name: Destroy Terraform state
-      if: always()
-      run: terraform destroy --auto-approve
-
-    - name: Set up Terraform
       run: |
-       cd chat_app/terraform
+        cd chat_app/terraform
+        terraform validate
 
     - name: Plan Terraform
-      run: terraform plan
+      run: |
+        cd chat_app/terraform
+        terraform plan
 
     - name: Apply Terraform
-      run: terraform apply -auto-approve
+      run: |
+        cd chat_app/terraform
+        terraform apply -auto-approve
 
   docker:
     runs-on: ubuntu-latest
