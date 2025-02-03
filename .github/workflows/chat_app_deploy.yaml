@@ -56,11 +56,11 @@ jobs:
 
     - name: Plan Terraform
       working-directory: chat_app
-      run: terraform plan
+      run: terraform plan -out=plan.tfplan
 
     - name: Apply Terraform
       working-directory: chat_app
-      run: terraform apply -auto-approve
+      run: terraform apply -auto-approve plan.tfplan
 
   docker:
     runs-on: ubuntu-latest
