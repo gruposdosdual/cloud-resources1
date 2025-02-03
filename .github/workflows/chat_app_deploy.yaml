@@ -30,7 +30,7 @@ jobs:
           aws-region: eu-west-1  # Cambia esto a tu región deseada
 
     - name: Initialize Terraform
-      working-directory: chat_app/terraform
+      working-directory: chat_app
       run: terraform init -backend-config="bucket=mi-terraform-tfstate-248189943700" -backend-config="key=terraform/state/terraform.tfstate" -backend-config="region=eu-west-1"
 
     - name: Validate Terraform configuration
@@ -38,11 +38,11 @@ jobs:
       run: terraform validate
 
     - name: Plan Terraform
-      working-directory: chat_app/terraform
+      working-directory: chat_app
       run: terraform plan
 
     - name: Apply Terraform
-      working-directory: chat_app/terraform
+      working-directory: chat_app
       run: terraform apply -auto-approve
 
   docker:
