@@ -24,8 +24,13 @@ jobs:
             const badgeUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/workflows/ci.yml/badge.svg`;
             const badgeMarkdown = `![${workflowName}](${badgeUrl})`;
             
-            let readme = fs.readFileSync('README.md', 'utf8');
-            if (!readme.includes(badgeMarkdown)) {
-              readme = badgeMarkdown + '\n\n' + readme;
-              fs.writeFileSync('README.md', readme);
+            // Crear README.md si no existe
+            if (!fs.existsSync(readmePath)) {
+                fs.writeFileSync(readmePath, `# Mi Proyecto\n\n${badgeMarkdown}`);
+            } else {
+                let readme = fs.readFileSync(readmePath, 'utf8');
+                if (!readme.includes(badgeMarkdown)) {
+                readme = badgeMarkdown + '\n\n' + readme;
+                fs.writeFileSync(readmePath, readme);
+                }
             }
