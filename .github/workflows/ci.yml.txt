@@ -1,0 +1,31 @@
+name: CI Pipeline
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Add README Badge
+        run: |
+          if [ ! -f README.md ]; then
+            echo "# Mi Proyecto" > README.md
+          fi
+          BADGE_URL="https://github.com/${{ github.repository }}/actions/workflows/ci.yml/badge.svg"
+          BADGE_LINE="![CI Pipeline Status]($BADGE_URL)"
+          
+          # Añadir badge al inicio del README si no existe
+          if ! grep -q "$BADGE_LINE" README.md; then
+            sed -i "1i $BADGE_LINE\n" README.md
+          fi
+      
+      - name: Commit Changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          git commit -m "Add workflow status badge" || echo "No changes to commit"
+          git push
